@@ -66,7 +66,9 @@ export default {
       keys.reduce((acc, k) => {
         const mq = window.matchMedia(computedBreakpoints[k]);
 
-        mq.addEventListener("change", e => {
+        // Using the deprecated addListener instead of addEventListener
+        // due to the lack of support in Safari
+        mq.addListener(e => {
           matchmediaObservable[k] = e.matches;
         });
 
