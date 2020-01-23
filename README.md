@@ -11,16 +11,16 @@ npm install @webqam/vue-match-media
 ## Usage
 
 ```js
-import Vue from "vue";
-import VueMatchMedia from "@webqam/vue-match-media";
+import Vue from 'vue';
+import VueMatchMedia from '@webqam/vue-match-media';
 
 // Define breakpoints you want to react to
 const breakpoints = {
   breakpoints: {
-    s: "48em",
-    m: "50em",
-    l: "62em",
-    xl: "75em"
+    s: '48em',
+    m: '50em',
+    l: '62em',
+    xl: '75em'
   }
 };
 
@@ -46,14 +46,32 @@ Vue.use(VueMatchMedia, { breakpoints });
 
 <script>
   export default {
-    name: "DemoComponent"
+    name: 'DemoComponent'
   };
 </script>
 ```
 
 ## Breakpoint syntax
 
-TBD
+```js
+const breakpoints = {
+  // @media (min-width: 1920px)
+  fullHD: 1920,
+  // @media (min-width: 48em)
+  medium: '48em',
+  // Object notation
+  // @media (max-width: 768px)
+  mobile: { maxWidth: 768 },
+  // @media (orientation: landscape)
+  landscape: { orientation: 'landscape' },
+  // Multiple features
+  // @media (min-width: 62em) and (min-resolution: 150dpi)
+  highDPIDesktop: {
+    minWidth: '62em',
+    minResolution: '150dpi'
+  }
+};
+```
 
 ## TODO List
 
