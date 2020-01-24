@@ -4,7 +4,7 @@
  * @returns {boolean}
  */
 function isNumberWithUnit(v) {
-  return typeof v === "string" && !!v.match(/^\d+(?:r?em|px)$/);
+  return typeof v === 'string' && !!v.match(/^\d+(?:r?em|px)$/);
 }
 
 /**
@@ -14,15 +14,15 @@ function isNumberWithUnit(v) {
  */
 function valueWithUnit(v) {
   if (
-    (typeof v === "number" && !isNaN(v)) ||
-    (typeof v === "string" && v.match(/^\d+(?:\.\d+)?$/))
+    (typeof v === 'number' && !isNaN(v)) ||
+    (typeof v === 'string' && v.match(/^\d+(?:\.\d+)?$/))
   ) {
     return `${v}px`;
-  } else if (typeof v === "string") {
+  } else if (typeof v === 'string') {
     return v;
   }
 
-  throw new TypeError("Unknown unit value.");
+  throw new TypeError('Unknown unit value.');
 }
 
 /**
@@ -31,7 +31,7 @@ function valueWithUnit(v) {
  * @returns {string}
  */
 function pascalToKebab(str) {
-  return str.replace(/[\w]([A-Z])/g, m => m[0] + "-" + m[1]).toLowerCase();
+  return str.replace(/[\w]([A-Z])/g, m => m[0] + '-' + m[1]).toLowerCase();
 }
 
 export default {
@@ -42,7 +42,7 @@ export default {
       const rules = {};
 
       if (
-        typeof breakpoints[k] === "number" ||
+        typeof breakpoints[k] === 'number' ||
         isNumberWithUnit(breakpoints[k])
       ) {
         rules.minWidth = breakpoints[k];
@@ -51,13 +51,13 @@ export default {
         breakpoints[k].length === 2
       ) {
         [rules.minWidth, rules.maxWidth] = breakpoints[k];
-      } else if (typeof breakpoints[k] === "object") {
+      } else if (typeof breakpoints[k] === 'object') {
         Object.assign(rules, breakpoints[k]);
       }
 
       acc[k] = Object.keys(rules)
         .map(r => `(${pascalToKebab(r)}: ${valueWithUnit(rules[r])})`)
-        .join(" and ");
+        .join(' and ');
 
       return acc;
     }, {});
@@ -79,5 +79,5 @@ export default {
     );
 
     Vue.prototype.$matchMedia = matchmediaObservable;
-  }
+  },
 };
