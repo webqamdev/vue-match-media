@@ -4,7 +4,7 @@
   "description": "React to media query changes in your Vue application (useful for adaptive design).",
   "main": "index.js",
   "scripts": {
-    "prettier": "prettier \"**/*.js\" \"**/*.json\" \"**/*.md\"",
+    "prettier": "prettier \"**/*.js\" \"**/*.json\" \"**/*.md\" \"**/*.yml\"",
     "prettier:check": "npm run prettier -- --check",
     "prettier:fix": "npm run prettier -- --write",
     "test": "npm run prettier:check"
