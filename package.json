@@ -4,8 +4,14 @@
   "description": "React to media query changes in your Vue application (useful for adaptive design).",
   "main": "index.js",
   "scripts": {
+    "prettier": "prettier \"**/*.js\" \"**/*.json\" \"**/*.md\"",
+    "prettier:check": "npm run prettier -- --check",
+    "prettier:fix": "npm run prettier -- --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Webqam",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^1.19.1"
+  }
 }

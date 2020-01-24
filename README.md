@@ -20,8 +20,8 @@ const breakpoints = {
     s: '48em',
     m: '50em',
     l: '62em',
-    xl: '75em'
-  }
+    xl: '75em',
+  },
 };
 
 // Load plugin
@@ -46,7 +46,7 @@ Vue.use(VueMatchMedia, { breakpoints });
 
 <script>
   export default {
-    name: 'DemoComponent'
+    name: 'DemoComponent',
   };
 </script>
 ```
@@ -68,8 +68,8 @@ const breakpoints = {
   // @media (min-width: 62em) and (min-resolution: 150dpi)
   highDPIDesktop: {
     minWidth: '62em',
-    minResolution: '150dpi'
-  }
+    minResolution: '150dpi',
+  },
 };
 ```
 
