@@ -1,0 +1,9 @@
+stages:
+  - build
+
+test:
+  image: node:12-alpine
+  stage: build
+  script:
+    - npm ci
+    - npm run test
