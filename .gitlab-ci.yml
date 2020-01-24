@@ -1,9 +1,9 @@
 stages:
-  - build
+  - lint
 
-test:
+lint:
   image: node:12-alpine
-  stage: build
+  stage: lint
   script:
     - npm ci
-    - npm run test
+    - npm run prettier:check
