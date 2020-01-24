@@ -73,6 +73,14 @@ const breakpoints = {
 };
 ```
 
+## Contributing
+
+Please see [contributing guide](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE)
+
 ## TODO List
 
 - [ ] SSR support (set a default breakpoint)
