@@ -2,7 +2,7 @@ stages:
   - lint
 
 lint:
-  image: node:12-alpine
+  image: node:erbium-alpine
   stage: lint
   script:
     - npm ci
