@@ -1,5 +1,6 @@
 stages:
   - lint
+  - publish
 
 lint:
   image: node:erbium-alpine
