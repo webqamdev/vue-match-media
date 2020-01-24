@@ -7,3 +7,14 @@ lint:
   script:
     - npm ci
     - npm run prettier:check
+
+publish:
+  stage: publish
+  image: node:erbium-alpine
+  script:
+    - '[[ -z $NPM_TOKEN ]] && exit 1'
+    - echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+    - npm publish --access public
+  only:
+    - /^(0|[1-9]\d*)\.(0|[1-9≥]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/
+  allow_failure: true
