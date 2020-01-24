@@ -7,7 +7,7 @@
     "prettier": "prettier \"**/*.js\" \"**/*.json\" \"**/*.md\"",
     "prettier:check": "npm run prettier -- --check",
     "prettier:fix": "npm run prettier -- --write",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run prettier:check"
   },
   "author": "Webqam",
   "license": "MIT",
