@@ -16,12 +16,10 @@ import VueMatchMedia from '@webqam/vue-match-media';
 
 // Define breakpoints you want to react to
 const breakpoints = {
-  breakpoints: {
-    s: '48em',
-    m: '50em',
-    l: '62em',
-    xl: '75em',
-  },
+  s: '48em',
+  m: '50em',
+  l: '62em',
+  xl: '75em',
 };
 
 // Load plugin
