@@ -16,6 +16,9 @@ build:
   script:
     - npm ci
     - npm run build
+  artifacts:
+    paths:
+      - dist
 
 publish:
   stage: publish
