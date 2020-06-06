@@ -10,8 +10,10 @@
     "type": "git",
     "url": "https://github.com/webqamdev/vue-match-media"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "prettier": "prettier \"**/*.js\" \"**/*.json\" \"**/*.md\" \"**/*.yml\"",
     "prettier:check": "npm run prettier -- --check",
     "prettier:fix": "npm run prettier -- --write",
@@ -20,9 +22,12 @@
   "author": "Webqam",
   "license": "MIT",
   "devDependencies": {
+    "@vue/cli-service": "^4.4.1",
     "husky": "^4.2.1",
     "lint-staged": "^10.0.2",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "typescript": "^3.9.5",
+    "vue": "^2.6.11"
   },
   "husky": {
     "hooks": {
