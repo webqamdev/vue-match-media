@@ -68,6 +68,21 @@ const breakpoints = {
     minWidth: '62em',
     minResolution: '150dpi',
   },
+  // @media (min-width: 768px) and (max-width: 992px)
+  tablet: [768, 992],
+  // SSR support
+  // In order to use SSR, you must provide a default value
+  // @media (min-width: 62em)
+  // Defaults to true during SSR, will be updated on client side
+  large: {
+    breakpoint: '62em',
+    defaultValue: true,
+  },
+  // Defaults to false during SSR, will be updated on client side
+  portrait: {
+    breakpoint: { orientation: 'portrait' },
+    defaultValue: false,
+  },
 };
 ```
 
@@ -81,5 +96,5 @@ Please see [contributing guide](CONTRIBUTING.md).
 
 ## TODO List
 
-- [ ] SSR support (set a default breakpoint)
+- [x] SSR support (set a default breakpoint)
 - [ ] Add demo
