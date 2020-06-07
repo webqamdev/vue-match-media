@@ -27,16 +27,52 @@ function pascalToKebab(str: string): string {
   return str.replace(/[\w]([A-Z])/g, m => m[0] + '-' + m[1]).toLowerCase();
 }
 
-type BreakpointValue = string | number;
-type Breakpoint =
+export type BreakpointValue = string | number;
+export type Breakpoint =
   | BreakpointValue
   | Record<string, BreakpointValue>
   | [BreakpointValue, BreakpointValue];
-type BreakpointMap = Record<string, Breakpoint>;
+
+export interface BreakpointEntryObject {
+  breakpoint: Breakpoint;
+  defaultValue?: boolean;
+}
+
+export type BreakpointMap = Record<string, Breakpoint | BreakpointEntryObject>;
 type BreakpointMapValue = Record<string, boolean>;
 
 export interface VueMatchMediaPluginOptions {
   breakpoints?: BreakpointMap;
+}
+
+function populateRules(
+  breakpoint: Breakpoint
+): Record<string, BreakpointValue> {
+  let rules: Record<string, BreakpointValue> = {};
+
+  if (typeof breakpoint === 'number' || isNumberWithUnit(breakpoint)) {
+    rules.minWidth = breakpoint as BreakpointValue;
+  } else if (
+    breakpoint instanceof Array &&
+    (breakpoint as BreakpointValue[]).length === 2
+  ) {
+    const [minWidth, maxWidth] = breakpoint as BreakpointValue[];
+
+    if (typeof minWidth === 'number' || isNumberWithUnit(minWidth)) {
+      rules.minWidth = minWidth;
+    }
+
+    if (typeof maxWidth === 'number' || isNumberWithUnit(maxWidth)) {
+      rules.maxWidth = maxWidth;
+    }
+  } else if (typeof breakpoint === 'object') {
+    rules = {
+      ...rules,
+      ...(breakpoint as Record<string, BreakpointValue>),
+    };
+  }
+
+  return rules;
 }
 
 export default {
@@ -48,32 +84,11 @@ export default {
 
     const computedBreakpoints: Record<string, string> = keys.reduce(
       (acc, k) => {
-        let rules: Record<string, BreakpointValue> = {};
-
-        if (
-          typeof breakpoints[k] === 'number' ||
-          isNumberWithUnit(breakpoints[k])
-        ) {
-          rules.minWidth = breakpoints[k] as BreakpointValue;
-        } else if (
-          breakpoints[k] instanceof Array &&
-          (breakpoints[k] as BreakpointValue[]).length === 2
-        ) {
-          const [minWidth, maxWidth] = breakpoints[k] as BreakpointValue[];
-
-          if (typeof minWidth === 'number' || isNumberWithUnit(minWidth)) {
-            rules.minWidth = minWidth;
-          }
-
-          if (typeof maxWidth === 'number' || isNumberWithUnit(maxWidth)) {
-            rules.maxWidth = maxWidth;
-          }
-        } else if (typeof breakpoints[k] === 'object') {
-          rules = {
-            ...rules,
-            ...(breakpoints[k] as Record<string, BreakpointValue>),
-          };
-        }
+        const rules: Record<string, BreakpointValue> = populateRules(
+          (typeof breakpoints[k] === 'object' &&
+            (breakpoints[k] as BreakpointEntryObject).breakpoint) ||
+            (breakpoints[k] as Breakpoint)
+        );
 
         acc[k] = Object.keys(rules)
           .map(r => `(${pascalToKebab(r)}: ${valueWithUnit(rules[r])})`)
@@ -86,15 +101,32 @@ export default {
 
     const matchmediaObservable = Vue.observable(
       keys.reduce((acc, k) => {
-        const mq = window.matchMedia(computedBreakpoints[k]);
+        // SSR
+        if (typeof window === 'undefined') {
+          if (
+            typeof (breakpoints[k] as BreakpointEntryObject).defaultValue ===
+            'undefined'
+          ) {
+            throw new Error(
+              `In order to use this plugin with SSR, you must provide a default value for every breakpoint (defaultValue is missing for breakpoint '${k}')`
+            );
+          }
 
-        // Using the deprecated addListener instead of addEventListener
-        // due to the lack of support in Safari
-        mq.addListener(e => {
-          matchmediaObservable[k] = e.matches;
-        });
+          acc[k] =
+            (breakpoints[k] as BreakpointEntryObject).defaultValue || false;
+        }
+        // Client
+        else {
+          const mq = window.matchMedia(computedBreakpoints[k]);
 
-        acc[k] = mq.matches;
+          // Using the deprecated addListener instead of addEventListener
+          // due to the lack of support in Safari
+          mq.addListener(e => {
+            matchmediaObservable[k] = e.matches;
+          });
+
+          acc[k] = mq.matches;
+        }
 
         return acc;
       }, {} as BreakpointMapValue)
