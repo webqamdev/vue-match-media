@@ -1,6 +1,6 @@
 {
   "name": "@webqam/vue-match-media",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "React to media query changes in your Vue application (useful for adaptive design).",
   "homepage": "https://github.com/webqamdev/vue-match-media",
   "bugs": {
