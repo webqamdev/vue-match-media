@@ -1,6 +1,8 @@
 # Vue matchMedia
 
-> React to media query changes in your Vue application (useful for adaptive design).
+This fork is a port to Vue 3
+
+> React to media query changes in your Vue 3 application (useful for adaptive design).
 
 ## Installation
 
@@ -11,8 +13,9 @@ npm install @webqam/vue-match-media
 ## Usage
 
 ```js
-import Vue from 'vue';
-import VueMatchMedia from '@webqam/vue-match-media';
+import { createApp } from 'vue';
+import App from '@/App.vue';
+import { createVueMatchMediaPlugin } from '@webqam/vue-match-media';
 
 // Define breakpoints you want to react to
 const breakpoints = {
@@ -22,8 +25,10 @@ const breakpoints = {
   xl: '75em',
 };
 
+const VueMatchMediaPlugin = createVueMatchMediaPlugin({ breakpoints });
+
 // Load plugin
-Vue.use(VueMatchMedia, { breakpoints });
+createApp(App).use(VueMatchMediaPlugin).mount('#app');
 ```
 
 ```html
@@ -36,15 +41,45 @@ Vue.use(VueMatchMedia, { breakpoints });
     <div v-if="$matchMedia.xl">
       This content is visible only on devices above 75em.
     </div>
-    <div v-else>
-      This content is visible only on devices under 75em.
-    </div>
+    <div v-else>This content is visible only on devices under 75em.</div>
   </div>
 </template>
 
 <script>
   export default {
     name: 'DemoComponent',
+  };
+</script>
+```
+
+Using composition API
+
+```html
+<template>
+  <div>
+    <div v-if="matchMedia.s">
+      This content is visible only on devices above 48em.
+    </div>
+
+    <div v-if="matchMedia.xl">
+      This content is visible only on devices above 75em.
+    </div>
+    <div v-else>This content is visible only on devices under 75em.</div>
+  </div>
+</template>
+
+<script>
+  import { useMatchMedia } from '@webqam/vue-match-media';
+
+  export default {
+    name: 'DemoComponent',
+    setup() {
+      const matchMedia = useMatchMedia();
+
+      return {
+        matchMedia,
+      };
+    },
   };
 </script>
 ```
