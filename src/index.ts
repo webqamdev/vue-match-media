@@ -1,4 +1,4 @@
-import Vue, { PluginObject, VueConstructor } from 'vue';
+import { App, inject, InjectionKey, reactive } from 'vue';
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -45,6 +45,11 @@ export interface VueMatchMediaPluginOptions {
   breakpoints?: BreakpointMap;
 }
 
+export interface VueMatchMediaPlugin {
+  options?: VueMatchMediaPluginOptions;
+  install(app: App): void;
+}
+
 function populateRules(
   breakpoint: Breakpoint
 ): Record<string, BreakpointValue> {
@@ -75,63 +80,77 @@ function populateRules(
   return rules;
 }
 
-export default {
-  install(
-    Vue: VueConstructor,
-    { breakpoints = {} }: VueMatchMediaPluginOptions = {}
-  ): void {
-    const keys: string[] = Object.keys(breakpoints);
+export const VueMatchMediaPluginSymbol: InjectionKey<VueMatchMediaPlugin> = Symbol('VueMatchMediaPlugin');
+export function useMatchMedia(): VueMatchMediaPlugin {
+  const matchMediaPlugin = inject(VueMatchMediaPluginSymbol);
+  if (!matchMediaPlugin) throw new Error('No VueMatchMediaPlugin provided!!!');
 
-    const computedBreakpoints: Record<string, string> = keys.reduce(
-      (acc, k) => {
-        const rules: Record<string, BreakpointValue> = populateRules(
-          (typeof breakpoints[k] === 'object' &&
-            (breakpoints[k] as BreakpointEntryObject).breakpoint) ||
+  return matchMediaPlugin;
+}
+
+export function createVueMatchMediaPlugin(
+  options?: VueMatchMediaPluginOptions,
+): VueMatchMediaPlugin {
+  return {
+    options,
+    install(app: App) {
+      const { breakpoints } = options
+
+      const keys: string[] = Object.keys(breakpoints);
+
+      const computedBreakpoints: Record<string, string> = keys.reduce(
+        (acc, k) => {
+          const rules: Record<string, BreakpointValue> = populateRules(
+            (typeof breakpoints[k] === 'object' &&
+              (breakpoints[k] as BreakpointEntryObject).breakpoint) ||
             (breakpoints[k] as Breakpoint)
-        );
+          );
 
-        acc[k] = Object.keys(rules)
-          .map(r => `(${pascalToKebab(r)}: ${valueWithUnit(rules[r])})`)
-          .join(' and ');
+          acc[k] = Object.keys(rules)
+            .map(r => `(${pascalToKebab(r)}: ${valueWithUnit(rules[r])})`)
+            .join(' and ');
 
-        return acc;
-      },
-      {} as Record<string, string>
-    );
+          return acc;
+        },
+        {} as Record<string, string>
+      );
 
-    const matchmediaObservable = Vue.observable(
-      keys.reduce((acc, k) => {
-        // SSR
-        if (typeof window === 'undefined') {
-          if (
-            typeof (breakpoints[k] as BreakpointEntryObject).defaultValue ===
-            'undefined'
-          ) {
-            throw new Error(
-              `In order to use this plugin with SSR, you must provide a default value for every breakpoint (defaultValue is missing for breakpoint '${k}')`
-            );
+      const matchMediaObservable = reactive(
+        keys.reduce((acc, k) => {
+          // SSR
+          if (typeof window === 'undefined') {
+            if (
+              typeof (breakpoints[k] as BreakpointEntryObject).defaultValue ===
+              'undefined'
+            ) {
+              throw new Error(
+                `In order to use this plugin with SSR, you must provide a default value for every breakpoint (defaultValue is missing for breakpoint '${k}')`
+              );
+            }
+
+            acc[k] =
+              (breakpoints[k] as BreakpointEntryObject).defaultValue || false;
+          }
+          // Client
+          else {
+            const mq = window.matchMedia(computedBreakpoints[k]);
+
+            // Using the deprecated addListener instead of addEventListener
+            // due to the lack of support in Safari
+            mq.addListener(e => {
+              matchMediaObservable[k] = e.matches;
+            });
+
+            acc[k] = mq.matches;
           }
 
-          acc[k] =
-            (breakpoints[k] as BreakpointEntryObject).defaultValue || false;
-        }
-        // Client
-        else {
-          const mq = window.matchMedia(computedBreakpoints[k]);
+          return acc;
+        }, {} as BreakpointMapValue)
+      );
 
-          // Using the deprecated addListener instead of addEventListener
-          // due to the lack of support in Safari
-          mq.addListener(e => {
-            matchmediaObservable[k] = e.matches;
-          });
+      app.config.globalProperties.$matchMedia = matchMediaObservable;
 
-          acc[k] = mq.matches;
-        }
-
-        return acc;
-      }, {} as BreakpointMapValue)
-    );
-
-    Vue.prototype.$matchMedia = matchmediaObservable;
-  },
-} as PluginObject<VueMatchMediaPluginOptions>;
+      app.provide(VueMatchMediaPluginSymbol, this);
+    },
+  };
+}
