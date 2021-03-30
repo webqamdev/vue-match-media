@@ -25,7 +25,7 @@ const breakpoints = {
   xl: '75em',
 };
 
-const VueMatchMediaPlugin = createVueMatchMediaPlugin(breakpoints);
+const VueMatchMediaPlugin = createVueMatchMediaPlugin({ breakpoints });
 
 // Load plugin
 createApp(App).use(VueMatchMediaPlugin).mount('#app');
@@ -41,9 +41,7 @@ createApp(App).use(VueMatchMediaPlugin).mount('#app');
     <div v-if="$matchMedia.xl">
       This content is visible only on devices above 75em.
     </div>
-    <div v-else>
-      This content is visible only on devices under 75em.
-    </div>
+    <div v-else>This content is visible only on devices under 75em.</div>
   </div>
 </template>
 
@@ -55,6 +53,7 @@ createApp(App).use(VueMatchMediaPlugin).mount('#app');
 ```
 
 Using composition API
+
 ```html
 <template>
   <div>
@@ -65,24 +64,22 @@ Using composition API
     <div v-if="matchMedia.xl">
       This content is visible only on devices above 75em.
     </div>
-    <div v-else>
-      This content is visible only on devices under 75em.
-    </div>
+    <div v-else>This content is visible only on devices under 75em.</div>
   </div>
 </template>
 
 <script>
   import { useMatchMedia } from '@webqam/vue-match-media';
-  
+
   export default {
     name: 'DemoComponent',
     setup() {
       const matchMedia = useMatchMedia();
-      
+
       return {
-        matchMedia
-      }
-    }
+        matchMedia,
+      };
+    },
   };
 </script>
 ```
