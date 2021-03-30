@@ -1,14 +1,14 @@
 {
-  "name": "@webqam/vue-match-media",
-  "version": "2.0.1",
-  "description": "React to media query changes in your Vue application (useful for adaptive design).",
-  "homepage": "https://github.com/webqamdev/vue-match-media",
+  "name": "@cwist/vue-match-media",
+  "version": "3.0.0",
+  "description": "React to media query changes in your Vue 3 application (useful for adaptive design).",
+  "homepage": "https://github.com/cwist2/vue-match-media",
   "bugs": {
-    "url": "https://github.com/webqamdev/vue-match-media/issues"
+    "url": "https://github.com/cwist2/vue-match-media"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webqamdev/vue-match-media"
+    "url": "https://github.com/cwist2/vue-match-media"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -38,5 +38,12 @@
     "*.{js,json,md}": [
       "prettier --write"
     ]
-  }
+  },
+  "dependencies": {},
+  "keywords": [
+    "vue",
+    "match",
+    "media",
+    "vue3"
+  ]
 }
