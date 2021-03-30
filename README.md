@@ -1,6 +1,8 @@
 # Vue matchMedia
 
-> React to media query changes in your Vue application (useful for adaptive design).
+This fork is a port to Vue 3
+
+> React to media query changes in your Vue 3 application (useful for adaptive design).
 
 ## Installation
 
