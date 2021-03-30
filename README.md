@@ -7,7 +7,7 @@ This fork is a port to Vue 3
 ## Installation
 
 ```sh
-npm install @webqam/vue-match-media
+npm install @cwist/vue-match-media
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install @webqam/vue-match-media
 ```js
 import { createApp } from 'vue';
 import App from '@/App.vue';
-import { createVueMatchMediaPlugin } from '@webqam/vue-match-media';
+import { createVueMatchMediaPlugin } from '@cwist/vue-match-media';
 
 // Define breakpoints you want to react to
 const breakpoints = {
@@ -28,7 +28,9 @@ const breakpoints = {
 const VueMatchMediaPlugin = createVueMatchMediaPlugin({ breakpoints });
 
 // Load plugin
-createApp(App).use(VueMatchMediaPlugin).mount('#app');
+createApp(App)
+  .use(VueMatchMediaPlugin)
+  .mount('#app');
 ```
 
 ```html
@@ -69,7 +71,7 @@ Using composition API
 </template>
 
 <script>
-  import { useMatchMedia } from '@webqam/vue-match-media';
+  import { useMatchMedia } from '@cwist/vue-match-media';
 
   export default {
     name: 'DemoComponent',
@@ -132,4 +134,5 @@ Please see [contributing guide](CONTRIBUTING.md).
 ## TODO List
 
 - [x] SSR support (set a default breakpoint)
+- [ ] Improve composition API use
 - [ ] Add demo
